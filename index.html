@@ -3,42 +3,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Live Color Display</title>
+  <title>Full Screen Dynamic Font Display</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      background-color: black;
       height: 100%;
       width: 100%;
+      background-color: black;
       font-family: monospace;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      overflow: hidden;
+      justify-content: center;
     }
     input {
-      font-size: 4vw;
+      font-size: 2vw;
       padding: 10px;
       width: 80%;
-      margin: 20px 0;
       background-color: #222;
       color: white;
       border: none;
       outline: none;
       text-align: center;
+      margin-bottom: 10px;
     }
     #output {
-      font-size: 8vw;
-      width: 100%;
+      color: white;
       text-align: center;
-      flex-grow: 1;
-      display: flex;
-      flex-wrap: wrap;
-      align-content: center;
-      justify-content: center;
-      word-break: break-word;
+      word-wrap: break-word;
+      width: 100%;
     }
     .red {
       color: red;
@@ -52,15 +47,25 @@
   </style>
 </head>
 <body>
-  <input type="text" id="textInput" placeholder="Type here...">
+  <input type="text" id="textInput" placeholder="Type here..." />
   <div id="output"></div>
 
   <script>
     const inputBox = document.getElementById("textInput");
     const outputDiv = document.getElementById("output");
 
+    function getFontSize(textLength) {
+      if (textLength <= 1) return '90vh';
+      if (textLength <= 3) return '60vh';
+      if (textLength <= 5) return '45vh';
+      if (textLength <= 10) return '25vh';
+      if (textLength <= 20) return '15vh';
+      return '8vh';
+    }
+
     inputBox.addEventListener("input", () => {
       const value = inputBox.value;
+      const fontSize = getFontSize(value.length);
 
       const coloredHtml = Array.from(value).map(char => {
         if (/[0-9]/.test(char)) {
@@ -73,6 +78,7 @@
       }).join('');
 
       outputDiv.innerHTML = coloredHtml;
+      outputDiv.style.fontSize = fontSize;
     });
   </script>
 </body>
