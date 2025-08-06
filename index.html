@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fullscreen Text Filler</title>
+  <title>Auto-Scaling Fullscreen Text</title>
   <style>
     html, body {
       margin: 0;
@@ -11,20 +11,21 @@
       height: 100%;
       width: 100%;
       background-color: black;
-      overflow: hidden;
       font-family: monospace;
+      overflow: hidden;
     }
     #output {
+      display: inline-block;
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .container {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       width: 100vw;
-      line-height: 1;
-      text-align: center;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      white-space: pre-wrap;
+      overflow: hidden;
     }
     .red {
       color: red;
@@ -38,30 +39,39 @@
   </style>
 </head>
 <body>
-  <div id="output"></div>
+  <div class="container">
+    <div id="output"></div>
+  </div>
 
   <script>
     let typedText = '';
-    const outputDiv = document.getElementById("output");
+    const output = document.getElementById("output");
 
-    function getFontSize(textLength) {
-      if (textLength <= 1) return '90vh';
-      if (textLength <= 3) return '60vh';
-      if (textLength <= 5) return '45vh';
-      if (textLength <= 10) return '25vh';
-      if (textLength <= 20) return '15vh';
-      return '8vh';
-    }
-
-    function render() {
-      const fontSize = getFontSize(typedText.length);
-      const html = Array.from(typedText).map(char => {
+    function applyColors(text) {
+      return Array.from(text).map(char => {
         if (/[0-9]/.test(char)) return `<span class="red">${char}</span>`;
         else if (/[a-zA-Z]/.test(char)) return `<span class="green">${char}</span>`;
         else return `<span class="white">${char}</span>`;
       }).join('');
-      outputDiv.innerHTML = html;
-      outputDiv.style.fontSize = fontSize;
+    }
+
+    function scaleTextToFit() {
+      let fontSize = 200; // start large
+      output.style.fontSize = fontSize + "px";
+
+      const parent = output.parentElement;
+      while (
+        (output.offsetWidth > parent.clientWidth || output.offsetHeight > parent.clientHeight) &&
+        fontSize > 5
+      ) {
+        fontSize -= 2;
+        output.style.fontSize = fontSize + "px";
+      }
+    }
+
+    function render() {
+      output.innerHTML = applyColors(typedText);
+      scaleTextToFit();
     }
 
     window.addEventListener("keydown", (e) => {
