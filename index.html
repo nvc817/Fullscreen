@@ -38,7 +38,7 @@
 const display = document.getElementById('display');
 let typedText = "";
 
-// Function to style and update display
+// Render styled text
 function renderText() {
     display.innerHTML = '';
     for (const char of typedText) {
@@ -56,7 +56,7 @@ function renderText() {
     resizeFont();
 }
 
-// Function to resize font to fill the screen
+// Resize font dynamically to fill screen
 function resizeFont() {
     let fontSize = 10;
     display.style.fontSize = fontSize + 'px';
@@ -67,17 +67,23 @@ function resizeFont() {
     display.style.fontSize = (fontSize - 1) + 'px';
 }
 
-// Handle typing
+// Key listener
 document.addEventListener('keydown', (event) => {
+    event.preventDefault(); // stop browser defaults
+
     if (event.key === 'Escape') {
         typedText = '';
-    } else if (event.key.length === 1) {
-        typedText += event.key;
+        renderText();
+        return;
     }
-    renderText();
+
+    if (event.key.length === 1) {
+        typedText += event.key;
+        renderText();
+    }
 });
 
-// Resize font on window resize
+// Handle window resize
 window.addEventListener('resize', resizeFont);
 </script>
 </body>
