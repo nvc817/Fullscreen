@@ -69,10 +69,18 @@ function resizeFont() {
 
 // Key listener
 document.addEventListener('keydown', (event) => {
-    event.preventDefault(); // stop browser defaults
+    // Prevent browser reload for F5
+    if (event.key === 'F5') {
+        event.preventDefault();
+        typedText = ''; // clear everything
+        renderText();
+        return;
+    }
 
-    if (event.key === 'Escape') {
-        typedText = '';
+    // Prevent browser default backspace navigation
+    if (event.key === 'Backspace') {
+        event.preventDefault();
+        typedText = typedText.slice(0, -1);
         renderText();
         return;
     }
