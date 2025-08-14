@@ -12,16 +12,12 @@
         overflow: hidden;
     }
     #display {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
         width: 100%;
         height: 100%;
         white-space: pre-wrap;
         word-break: break-word;
         font-family: monospace;
-        line-height: 1.1;
+        line-height: 1; /* no extra spacing */
         color: white;
     }
     .number { color: red; }
@@ -35,17 +31,18 @@
 const display = document.getElementById('display');
 let typedText = "";
 
-// Adjust font size to fill screen without overflow
+// Fit text exactly to screen height
 function adjustFontSize() {
-    let fontSize = Math.min(window.innerWidth, window.innerHeight) / 2; // start big
+    let fontSize = Math.min(window.innerWidth, window.innerHeight); // start huge
     display.style.fontSize = fontSize + 'px';
-    while ((display.scrollWidth > window.innerWidth || display.scrollHeight > window.innerHeight) && fontSize > 10) {
+    // Reduce until it fits within both height and width
+    while ((display.scrollWidth > window.innerWidth || display.scrollHeight > window.innerHeight) && fontSize > 5) {
         fontSize -= 2;
         display.style.fontSize = fontSize + 'px';
     }
 }
 
-// Render styled text
+// Render text with colors
 function renderText() {
     let html = "";
     for (const char of typedText) {
@@ -81,10 +78,10 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-// Resize font when window changes
+// Adjust size on resize
 window.addEventListener('resize', adjustFontSize);
 
-// Initial render
+// Initial display
 renderText();
 </script>
 </body>
