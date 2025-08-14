@@ -21,7 +21,6 @@
         white-space: pre-wrap;
         word-break: break-word;
         font-family: monospace;
-        font-size: 8vw; /* Scales with viewport width */
         line-height: 1.1;
         color: white;
     }
@@ -36,7 +35,17 @@
 const display = document.getElementById('display');
 let typedText = "";
 
-// Render styled text without heavy loops
+// Adjust font size to fill screen without overflow
+function adjustFontSize() {
+    let fontSize = Math.min(window.innerWidth, window.innerHeight) / 2; // start big
+    display.style.fontSize = fontSize + 'px';
+    while ((display.scrollWidth > window.innerWidth || display.scrollHeight > window.innerHeight) && fontSize > 10) {
+        fontSize -= 2;
+        display.style.fontSize = fontSize + 'px';
+    }
+}
+
+// Render styled text
 function renderText() {
     let html = "";
     for (const char of typedText) {
@@ -49,32 +58,31 @@ function renderText() {
         }
     }
     display.innerHTML = html;
+    adjustFontSize();
 }
 
 // Key listener
 document.addEventListener('keydown', (event) => {
-    // Clear with F5 (disable reload)
     if (event.key === 'F5') {
         event.preventDefault();
         typedText = '';
         renderText();
         return;
     }
-
-    // Backspace to delete last char
     if (event.key === 'Backspace') {
         event.preventDefault();
         typedText = typedText.slice(0, -1);
         renderText();
         return;
     }
-
-    // Append typed characters
     if (event.key.length === 1) {
         typedText += event.key;
         renderText();
     }
 });
+
+// Resize font when window changes
+window.addEventListener('resize', adjustFontSize);
 
 // Initial render
 renderText();
