@@ -21,6 +21,8 @@
         white-space: pre-wrap;
         word-break: break-word;
         font-family: monospace;
+        font-size: 8vw; /* scale based on screen width */
+        line-height: 1.1;
         color: white;
     }
     .number {
@@ -53,31 +55,19 @@ function renderText() {
         span.textContent = char;
         display.appendChild(span);
     }
-    resizeFont();
-}
-
-// Resize font dynamically to fill screen
-function resizeFont() {
-    let fontSize = 10;
-    display.style.fontSize = fontSize + 'px';
-    while (display.scrollHeight <= window.innerHeight && display.scrollWidth <= window.innerWidth) {
-        fontSize++;
-        display.style.fontSize = fontSize + 'px';
-    }
-    display.style.fontSize = (fontSize - 1) + 'px';
 }
 
 // Key listener
 document.addEventListener('keydown', (event) => {
-    // Prevent browser reload for F5
+    // F5 clears screen instead of reloading
     if (event.key === 'F5') {
         event.preventDefault();
-        typedText = ''; // clear everything
+        typedText = '';
         renderText();
         return;
     }
 
-    // Prevent browser default backspace navigation
+    // Backspace removes last char
     if (event.key === 'Backspace') {
         event.preventDefault();
         typedText = typedText.slice(0, -1);
@@ -85,14 +75,15 @@ document.addEventListener('keydown', (event) => {
         return;
     }
 
+    // Add typed character
     if (event.key.length === 1) {
         typedText += event.key;
         renderText();
     }
 });
 
-// Handle window resize
-window.addEventListener('resize', resizeFont);
+// Initial render
+renderText();
 </script>
 </body>
 </html>
