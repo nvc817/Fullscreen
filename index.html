@@ -21,16 +21,12 @@
         white-space: pre-wrap;
         word-break: break-word;
         font-family: monospace;
-        font-size: 8vw; /* scale based on screen width */
+        font-size: 8vw; /* Scales with viewport width */
         line-height: 1.1;
         color: white;
     }
-    .number {
-        color: red;
-    }
-    .character {
-        color: limegreen;
-    }
+    .number { color: red; }
+    .character { color: limegreen; }
 </style>
 </head>
 <body>
@@ -40,26 +36,24 @@
 const display = document.getElementById('display');
 let typedText = "";
 
-// Render styled text
+// Render styled text without heavy loops
 function renderText() {
-    display.innerHTML = '';
+    let html = "";
     for (const char of typedText) {
-        const span = document.createElement('span');
         if (/[0-9]/.test(char)) {
-            span.className = 'number';
+            html += `<span class="number">${char}</span>`;
         } else if (/[a-zA-Z]/.test(char)) {
-            span.className = 'character';
+            html += `<span class="character">${char}</span>`;
         } else {
-            span.style.color = 'white';
+            html += `<span style="color:white">${char}</span>`;
         }
-        span.textContent = char;
-        display.appendChild(span);
     }
+    display.innerHTML = html;
 }
 
 // Key listener
 document.addEventListener('keydown', (event) => {
-    // F5 clears screen instead of reloading
+    // Clear with F5 (disable reload)
     if (event.key === 'F5') {
         event.preventDefault();
         typedText = '';
@@ -67,7 +61,7 @@ document.addEventListener('keydown', (event) => {
         return;
     }
 
-    // Backspace removes last char
+    // Backspace to delete last char
     if (event.key === 'Backspace') {
         event.preventDefault();
         typedText = typedText.slice(0, -1);
@@ -75,7 +69,7 @@ document.addEventListener('keydown', (event) => {
         return;
     }
 
-    // Add typed character
+    // Append typed characters
     if (event.key.length === 1) {
         typedText += event.key;
         renderText();
